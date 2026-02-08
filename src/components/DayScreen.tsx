@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { DayType } from "./ValentineWeek";
 
 interface DayScreenProps {
@@ -16,16 +16,26 @@ interface DayContent {
   quote: string;
 }
 
+const decodeName = (encoded?: string) => {
+  try {
+    if (!encoded) return "My Love";
+    const decoded = decodeURIComponent(escape(atob(encoded)));
+    return decoded.replace(/[^a-zA-Z ]/g, "").slice(0, 20) || "My Love";
+  } catch {
+    return "My Love";
+  }
+};
+
 const DAY_CONTENT: Record<DayType, DayContent> = {
   rose: {
     title: "Rose Day",
     emoji: "🌹",
     background: "from-rose-900/50 to-pink-900/50",
     messages: [
-      "A single rose can be my garden... a single friend, my world 🌹",
-      "Like a rose, love is beautiful but comes with thorns worth enduring 💕",
-      "You're the most beautiful bloom in my garden of life ✨",
-      "Every petal whispers how much I love you 🌸",
+      "A single rose can be my garden... a single friend, my world {{name}} 🌹",
+      "Like a rose, love is beautiful but comes with thorns worth enduring {{name}} 💕",
+      "{{name}}, you're the most beautiful bloom in my garden of life ✨",
+      "Every petal whispers how much I love you {{name}} 🌸",
     ],
     activities: ["Gift a red rose 🌹", "Write a love poem 📝", "Create a rose bouquet 💐", "Take romantic photos 📸"],
     quote: "Where flowers bloom, so does hope.",
@@ -35,10 +45,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "💍",
     background: "from-purple-900/50 to-pink-900/50",
     messages: [
-      "Will you be my forever? 💍",
-      "Every love story is beautiful, but ours is my favorite 💜",
-      "I want to grow old with you, will you let me? ✨",
-      "My heart has been searching, and it found you 💕",
+      "{{name}}, will you be my forever? 💍",
+      "Every love story is beautiful, but ours is my favorite, {{name}} 💜",
+      "I want to grow old with you {{name}}, will you let me? ✨",
+      "My heart has been searching, and it found you {{name}} 💕",
     ],
     activities: ["Express your feelings 💌", "Plan a surprise proposal 🎁", "Write a heartfelt letter 📝", "Create a romantic moment 🌙"],
     quote: "The best thing to hold onto in life is each other.",
@@ -48,10 +58,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "🍫",
     background: "from-amber-900/50 to-orange-900/50",
     messages: [
-      "You're sweeter than the finest chocolate 🍫",
-      "Life is like a box of chocolates, but you're my favorite flavor 💝",
-      "You melt my heart like chocolate melts on my tongue ✨",
-      "Sweet moments with you are my favorite treats 🍬",
+      "{{name}}, you're sweeter than the finest chocolate 🍫",
+      "Life is like a box of chocolates, but you're my favorite flavor, {{name}} 💝",
+      "You melt my heart like chocolate melts on my tongue {{name}} ✨",
+      "Sweet moments with you, {{name}}, are my favorite treats 🍬",
     ],
     activities: ["Gift chocolates 🍫", "Bake chocolate treats together 🧁", "Have a chocolate fondue date 🫕", "Create a sweet care package 🎁"],
     quote: "All you need is love and a little chocolate.",
@@ -61,10 +71,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "🧸",
     background: "from-amber-800/50 to-yellow-900/50",
     messages: [
-      "You're as huggable as the cutest teddy bear 🧸",
-      "Hold this teddy when I'm not there, it carries my love 💕",
-      "Soft, warm, and comforting - just like you ✨",
-      "My teddy for my teddy bear 🤗",
+      "{{name}}, you're as huggable as the cutest teddy bear 🧸",
+      "Hold this teddy {{name}} when I'm not there, it carries my love 💕",
+      "Soft, warm, and comforting {{name}} - just like you ✨",
+      "My teddy for my teddy bear {{name}} 🤗",
     ],
     activities: ["Gift a teddy bear 🧸", "Plan a cozy movie night 🎬", "Make a DIY plushie 🪡", "Share childhood memories 📖"],
     quote: "Some things don't need to be perfect; they just need to be cuddly.",
@@ -74,10 +84,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "🤞",
     background: "from-emerald-900/50 to-teal-900/50",
     messages: [
-      "I promise to love you in every version of yourself 💚",
-      "My promise: to stand by you through every storm 🌟",
-      "I'll love you not just today, but for all our tomorrows ✨",
-      "Pinky promise to be your forever partner 🤞",
+      "I promise to love you in every version of yourself {{name}} 💚",
+      "My promise {{name}}: to stand by you through every storm 🌟",
+      "I'll love you not just today, but for all our tomorrows {{name}} ✨",
+      "Pinky promise to be your forever partner {{name}} 🤞",
     ],
     activities: ["Make meaningful promises 💍", "Write a promise letter 📝", "Create a future bucket list 📋", "Exchange promise rings 💫"],
     quote: "A promise made is a debt unpaid.",
@@ -87,10 +97,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "🤗",
     background: "from-orange-900/50 to-rose-900/50",
     messages: [
-      "A hug from you makes everything better 🤗",
-      "In your embrace, I find my happy place 💕",
-      "Wrapped in your arms is my favorite place to be ✨",
-      "Every hug from you heals my soul 💖",
+      "A hug from you, {{name}}, makes everything better 🤗",
+      "In your embrace, {{name}}, I find my happy place 💕",
+      "Wrapped in your arms is my favorite place to be {{name}} ✨",
+      "Every hug from you {{name}} heals my soul 💖",
     ],
     activities: ["Give a long warm hug 🤗", "Cuddle while watching movies 📺", "Surprise with a back hug 💕", "Create a hug coupon book 🎟️"],
     quote: "A hug is a handshake from the heart.",
@@ -100,10 +110,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "💋",
     background: "from-red-900/50 to-pink-900/50",
     messages: [
-      "Your kisses are my favorite addiction 💋",
-      "Every kiss tells a story of how much I love you 💕",
-      "Sealed with a kiss, forever in my heart ✨",
-      "Your lips have magic that my heart can't resist 💘",
+      "{{name}}, your kisses are my favorite addiction 💋",
+      "Every kiss tells a story of how much I love you {{name}} 💕",
+      "Sealed with a kiss, forever in my heart {{name}} ✨",
+      "Your lips have magic that my heart can't resist {{name}} 💘",
     ],
     activities: ["Steal a sweet kiss 💋", "Try different kiss types 😘", "Watch a romantic movie 🎬", "Create a kissing booth 💕"],
     quote: "A kiss is a lovely trick designed by nature.",
@@ -113,10 +123,10 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
     emoji: "💝",
     background: "from-primary/50 to-rose-900/50",
     messages: [
-      "You're my today, tomorrow, and forever 💝",
-      "Happy Valentine's Day to my whole world 🌍",
-      "Every day is Valentine's Day when I'm with you ✨",
-      "You're the love story I always wanted to live 💕",
+      "You're my today, tomorrow, and forever {{name}} 💝",
+      "Happy Valentine's Day to my whole world, {{name}} 🌍",
+      "Every day is Valentine's Day when I'm with you {{name}} ✨",
+      "{{name}}, you're the love story I always wanted to live 💕",
     ],
     activities: ["Exchange heartfelt gifts 🎁", "Go on a romantic date 🍽️", "Renew your vows of love 💍", "Create lasting memories 📸"],
     quote: "You are my Valentine every day of the year.",
@@ -124,151 +134,158 @@ const DAY_CONTENT: Record<DayType, DayContent> = {
 };
 
 const DayScreen = ({ day, onBack }: DayScreenProps) => {
-  const content = DAY_CONTENT[day];
+  const content: DayContent = DAY_CONTENT[day];
   const [messageIndex, setMessageIndex] = useState(0);
   const [showActivities, setShowActivities] = useState(false);
+  const [name, setName] = useState("My Love");
+
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const possibleCode = pathParts[pathParts.length - 1];
+    const queryCode = new URLSearchParams(window.location.search).get("code");
+    const encoded = queryCode || possibleCode;
+
+    if (encoded && encoded !== "") {
+      setName(decodeName(encoded));
+    }
+  }, []);
 
   const nextMessage = () => {
     setMessageIndex((i) => (i + 1) % content.messages.length);
   };
 
+  // Helper function to replace the token with the actual name
+  const formatMessage = (msg: string) => {
+    return msg.replace(/{{name}}/g, name);
+  };
+
   return (
     <motion.div
-      className={`flex flex-col items-center min-h-screen relative z-10 px-4 py-8 overflow-y-auto bg-gradient-to-b ${content.background}`}
+      className={`flex flex-col items-center h-screen w-full relative z-10 px-6 py-4 overflow-hidden bg-gradient-to-b ${content.background} justify-between`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Back Button */}
       <motion.button
         onClick={onBack}
-        className="absolute top-4 left-4 px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-primary/20 text-primary-foreground text-sm font-medium"
-        whileHover={{ scale: 1.05 }}
+        className="self-start px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-primary/20 text-primary-foreground text-xs font-medium"
         whileTap={{ scale: 0.95 }}
       >
         ← Back
       </motion.button>
 
-      {/* Emoji */}
-      <motion.div
-        className="text-6xl sm:text-8xl mt-12 mb-6"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-      >
-        {content.emoji}
-      </motion.div>
-
-      {/* Title */}
-      <motion.h1
-        className="font-romantic text-4xl sm:text-6xl text-glow text-primary-foreground mb-4 text-center"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        {content.title}
-      </motion.h1>
-
-      {/* Quote */}
-      <motion.p
-        className="text-blush/80 text-sm sm:text-base italic mb-8 text-center max-w-md"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
-        "{content.quote}"
-      </motion.p>
-
-      {/* Message Card */}
-      <motion.div
-        className="max-w-md w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-6 sm:p-8 text-center mb-6"
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, type: "spring" }}
-        style={{ animation: "pulse-glow 3s ease-in-out infinite" }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={messageIndex}
-            className="font-romantic text-xl sm:text-2xl text-blush leading-relaxed"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            {content.messages[messageIndex]}
-          </motion.p>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-8">
-        <motion.button
-          onClick={nextMessage}
-          className="px-6 py-3 rounded-full bg-primary/20 border border-primary/40 text-primary-foreground font-medium hover:bg-primary/30 transition-colors"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm">
+        <motion.div
+          className="text-7xl mb-2"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
         >
-          Another message 💌
-        </motion.button>
-        <motion.button
-          onClick={() => setShowActivities(!showActivities)}
-          className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          {content.emoji}
+        </motion.div>
+
+        <motion.h1
+          className="font-romantic text-4xl text-glow text-primary-foreground mb-1 text-center"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
         >
-          {showActivities ? "Hide Ideas" : "Activity Ideas"} ✨
-        </motion.button>
+          {content.title}
+        </motion.h1>
+
+        <motion.p
+          className="text-blush/80 text-xs italic mb-6 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          "{content.quote}"
+        </motion.p>
+
+        <motion.div
+          className="w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-6 text-center mb-6 min-h-[140px] flex items-center justify-center"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          style={{ animation: "pulse-glow 3s ease-in-out infinite" }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={messageIndex}
+              className="font-romantic text-xl text-blush leading-tight"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Applying the name replacement here */}
+              {formatMessage(content.messages[messageIndex])}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+
+        <div className="relative w-full">
+          <AnimatePresence>
+            {showActivities && (
+              <motion.div
+                className="absolute bottom-full left-0 right-0 z-20 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl p-4 mb-4 shadow-2xl"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              >
+                <h3 className="font-romantic text-lg text-primary-foreground mb-3 text-center">
+                  Things to Do
+                </h3>
+                <ul className="space-y-2">
+                  {content.activities.map((activity, index) => (
+                    <motion.li
+                      key={index}
+                      className="flex items-center gap-2 text-xs text-blush/90"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                      {activity}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex flex-col gap-2 w-full pb-4">
+            <motion.button
+              onClick={nextMessage}
+              className="w-full py-3 rounded-xl bg-primary/20 border border-primary/40 text-primary-foreground text-sm font-medium"
+              whileTap={{ scale: 0.98 }}
+            >
+              Another message 💌
+            </motion.button>
+            <motion.button
+              onClick={() => setShowActivities(!showActivities)}
+              className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium shadow-lg shadow-primary/20"
+              whileTap={{ scale: 0.98 }}
+            >
+              {showActivities ? "Close Ideas" : "Activity Ideas"} ✨
+            </motion.button>
+          </div>
+        </div>
       </div>
 
-      {/* Activities */}
-      <AnimatePresence>
-        {showActivities && (
-          <motion.div
-            className="max-w-md w-full bg-card/60 backdrop-blur-md border border-primary/20 rounded-2xl p-5 sm:p-6"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h3 className="font-romantic text-2xl text-primary-foreground mb-4 text-center">
-              Things to Do Today
-            </h3>
-            <ul className="space-y-3">
-              {content.activities.map((activity, index) => (
-                <motion.li
-                  key={index}
-                  className="flex items-center gap-3 text-blush/90"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <span className="w-2 h-2 rounded-full bg-primary" />
-                  {activity}
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Floating decorative elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <motion.span
             key={i}
-            className="absolute text-4xl opacity-20"
+            className="absolute text-3xl opacity-10"
             style={{
-              left: `${10 + i * 15}%`,
-              top: `${20 + (i % 3) * 25}%`,
+              left: `${15 + i * 25}%`,
+              top: `${20 + (i % 2) * 40}%`,
             }}
             animate={{
-              y: [0, -20, 0],
-              rotate: [0, 10, -10, 0],
+              y: [0, -15, 0],
+              rotate: [0, 5, -5, 0],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 5 + i,
               repeat: Infinity,
               ease: "easeInOut",
             }}
