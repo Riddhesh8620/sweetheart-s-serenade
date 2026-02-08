@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 const MESSAGES = [
-  "You're the reason my heart beats faster 💓",
+  "ZALAK You're the reason my heart beats faster 💓",
   "Every love story is beautiful, but ours is my favorite 💝",
   "In a sea of people, my eyes will always search for you 🌹",
   "You had me at hello... and every moment since ✨",
-  "My heart is, and always will be, yours 💘",
+  "ZALAK, My heart is, and always will be, yours 💘",
 ];
 
 const CompletionScreen = () => {
