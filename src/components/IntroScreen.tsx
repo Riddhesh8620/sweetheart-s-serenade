@@ -41,7 +41,7 @@ const IntroScreen = ({ onStart }: IntroScreenProps) => {
 
       <motion.button
         onClick={onStart}
-        className="relative px-10 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-lg tracking-wide overflow-hidden"
+        className="relative px-8 sm:px-10 py-3 sm:py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base sm:text-lg tracking-wide overflow-hidden"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         whileHover={{ scale: 1.05, boxShadow: "0 0 40px hsl(345 80% 55% / 0.6)" }}
