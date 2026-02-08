@@ -10,7 +10,6 @@ const MESSAGES = [
   "In a sea of people, my eyes will always search for you 🌹",
   "You had me at hello... and every moment since ✨",
   "{{name}}, my heart is, and always will be, yours 💘",
-  "My BABUUUUDIII 😘"
 ];
 
 /* ------------------ DECODE HELPER ------------------ */
