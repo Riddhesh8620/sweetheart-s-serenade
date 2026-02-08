@@ -1,12 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import FloatingHearts from "@/components/FloatingHearts";
+import IntroScreen from "@/components/IntroScreen";
+import HeartGame from "@/components/HeartGame";
+import CompletionScreen from "@/components/CompletionScreen";
+
+type GameState = "intro" | "playing" | "complete";
 
 const Index = () => {
+  const [gameState, setGameState] = useState<GameState>("intro");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <FloatingHearts />
+
+      <AnimatePresence mode="wait">
+        {gameState === "intro" && (
+          <IntroScreen key="intro" onStart={() => setGameState("playing")} />
+        )}
+        {gameState === "playing" && (
+          <HeartGame key="game" onComplete={() => setGameState("complete")} />
+        )}
+        {gameState === "complete" && (
+          <CompletionScreen key="complete" />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
