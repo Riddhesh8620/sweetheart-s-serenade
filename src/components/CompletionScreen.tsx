@@ -18,13 +18,13 @@ const CompletionScreen = () => {
 
   return (
     <motion.div
-      className="flex flex-col items-center justify-center min-h-screen relative z-10 px-6"
+      className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4 sm:px-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
       <motion.div
-        className="text-8xl mb-8"
+        className="text-6xl sm:text-8xl mb-6 sm:mb-8"
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
@@ -33,7 +33,7 @@ const CompletionScreen = () => {
       </motion.div>
 
       <motion.h2
-        className="font-romantic text-4xl sm:text-6xl text-glow text-primary-foreground mb-2 text-center"
+        className="font-romantic text-3xl sm:text-4xl md:text-6xl text-glow text-primary-foreground mb-2 text-center"
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -42,7 +42,7 @@ const CompletionScreen = () => {
       </motion.h2>
 
       <motion.p
-        className="text-blush text-lg mb-10"
+        className="text-blush text-base sm:text-lg mb-6 sm:mb-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
@@ -51,7 +51,7 @@ const CompletionScreen = () => {
       </motion.p>
 
       <motion.div
-        className="max-w-md w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-8 text-center"
+        className="max-w-md w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-5 sm:p-8 text-center mx-4"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.3, type: "spring" }}
@@ -62,7 +62,7 @@ const CompletionScreen = () => {
 
       <motion.button
         onClick={nextMessage}
-        className="mt-8 px-8 py-3 rounded-full bg-primary/20 border border-primary/40 text-primary-foreground font-medium hover:bg-primary/30 transition-colors"
+        className="mt-6 sm:mt-8 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-primary/20 border border-primary/40 text-primary-foreground font-medium hover:bg-primary/30 transition-colors text-sm sm:text-base"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8 }}
@@ -73,7 +73,7 @@ const CompletionScreen = () => {
       </motion.button>
 
       <motion.div
-        className="mt-12 flex gap-3"
+        className="mt-8 sm:mt-12 flex gap-2 sm:gap-3"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}
@@ -81,7 +81,7 @@ const CompletionScreen = () => {
         {["❤️", "🧡", "💛", "💚", "💙", "💜"].map((emoji, i) => (
           <motion.span
             key={emoji}
-            className="text-2xl"
+            className="text-xl sm:text-2xl"
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 1.5, delay: i * 0.15, repeat: Infinity }}
           >
