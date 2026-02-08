@@ -7,6 +7,7 @@ const MESSAGES = [
   "In a sea of people, my eyes will always search for you 🌹",
   "You had me at hello... and every moment since ✨",
   "ZALAK, My heart is, and always will be, yours 💘",
+  "My BABUUUUDIII 😘"
 ];
 
 const CompletionScreen = () => {
