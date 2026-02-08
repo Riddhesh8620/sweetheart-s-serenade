@@ -154,14 +154,14 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
     setMessageIndex((i) => (i + 1) % content.messages.length);
   };
 
-  // Helper function to replace the token with the actual name
   const formatMessage = (msg: string) => {
     return msg.replace(/{{name}}/g, name);
   };
 
   return (
     <motion.div
-      className={`flex flex-col items-center h-screen w-full relative z-10 px-6 py-4 overflow-hidden bg-gradient-to-b ${content.background} justify-between`}
+      // Use h-[100dvh] for mobile browser compatibility and justify-between to spread content
+      className={`flex flex-col items-center h-[100dvh] w-full relative z-10 px-6 py-4 overflow-hidden bg-gradient-to-b ${content.background} justify-between`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -175,9 +175,11 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
         ← Back
       </motion.button>
 
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm">
+      {/* Main Content Wrapper - using flex-grow but limited space */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm overflow-hidden">
+        {/* Scaled down Emoji for mobile */}
         <motion.div
-          className="text-7xl mb-2"
+          className="text-6xl mb-1"
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -185,8 +187,9 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
           {content.emoji}
         </motion.div>
 
+        {/* Scaled down Title */}
         <motion.h1
-          className="font-romantic text-4xl text-glow text-primary-foreground mb-1 text-center"
+          className="font-romantic text-3xl text-glow text-primary-foreground mb-1 text-center"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
@@ -194,15 +197,16 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
         </motion.h1>
 
         <motion.p
-          className="text-blush/80 text-xs italic mb-6 text-center"
+          className="text-blush/80 text-[10px] uppercase tracking-widest italic mb-4 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
           "{content.quote}"
         </motion.p>
 
+        {/* Message Card - max-height ensures it doesn't push buttons off screen */}
         <motion.div
-          className="w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-6 text-center mb-6 min-h-[140px] flex items-center justify-center"
+          className="w-full bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-5 text-center mb-4 min-h-[100px] max-h-[180px] flex items-center justify-center"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           style={{ animation: "pulse-glow 3s ease-in-out infinite" }}
@@ -210,31 +214,32 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
           <AnimatePresence mode="wait">
             <motion.p
               key={messageIndex}
-              className="font-romantic text-xl text-blush leading-tight"
+              className="font-romantic text-lg text-blush leading-snug overflow-y-auto"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Applying the name replacement here */}
               {formatMessage(content.messages[messageIndex])}
             </motion.p>
           </AnimatePresence>
         </motion.div>
 
-        <div className="relative w-full">
+        {/* Buttons and Activities Container */}
+        <div className="relative w-full mt-auto">
           <AnimatePresence>
             {showActivities && (
               <motion.div
-                className="absolute bottom-full left-0 right-0 z-20 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl p-4 mb-4 shadow-2xl"
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                // Absolute positioning to overlay the main content when open
+                className="absolute bottom-full left-0 right-0 z-20 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl p-4 mb-2 shadow-2xl max-h-[300px] overflow-y-auto"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
               >
-                <h3 className="font-romantic text-lg text-primary-foreground mb-3 text-center">
+                <h3 className="font-romantic text-lg text-primary-foreground mb-2 text-center">
                   Things to Do
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-1.5">
                   {content.activities.map((activity, index) => (
                     <motion.li
                       key={index}
@@ -252,17 +257,17 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
             )}
           </AnimatePresence>
 
-          <div className="flex flex-col gap-2 w-full pb-4">
+          <div className="flex flex-col gap-2 w-full pb-2">
             <motion.button
               onClick={nextMessage}
-              className="w-full py-3 rounded-xl bg-primary/20 border border-primary/40 text-primary-foreground text-sm font-medium"
+              className="w-full py-2.5 rounded-xl bg-primary/20 border border-primary/40 text-primary-foreground text-xs font-medium"
               whileTap={{ scale: 0.98 }}
             >
               Another message 💌
             </motion.button>
             <motion.button
               onClick={() => setShowActivities(!showActivities)}
-              className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium shadow-lg shadow-primary/20"
+              className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium shadow-lg shadow-primary/20"
               whileTap={{ scale: 0.98 }}
             >
               {showActivities ? "Close Ideas" : "Activity Ideas"} ✨
@@ -271,21 +276,22 @@ const DayScreen = ({ day, onBack }: DayScreenProps) => {
         </div>
       </div>
 
+      {/* Decorative Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        {[...Array(4)].map((_, i) => (
+        {[...Array(3)].map((_, i) => (
           <motion.span
             key={i}
-            className="absolute text-3xl opacity-10"
+            className="absolute text-2xl opacity-10"
             style={{
-              left: `${15 + i * 25}%`,
-              top: `${20 + (i % 2) * 40}%`,
+              left: `${20 + i * 30}%`,
+              top: `${15 + (i % 2) * 50}%`,
             }}
             animate={{
-              y: [0, -15, 0],
+              y: [0, -10, 0],
               rotate: [0, 5, -5, 0],
             }}
             transition={{
-              duration: 5 + i,
+              duration: 6 + i,
               repeat: Infinity,
               ease: "easeInOut",
             }}
