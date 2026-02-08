@@ -36,7 +36,7 @@ const IntroScreen = ({ onStart }: IntroScreenProps) => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}
       >
-        Catch the falling hearts to unlock a special Valentine's message 💌
+        Celebrate all 7 days of Valentine's Week with love, joy & playful moments 💌
       </motion.p>
 
       <motion.button
@@ -49,7 +49,7 @@ const IntroScreen = ({ onStart }: IntroScreenProps) => {
         transition={{ delay: 0.9, duration: 0.5 }}
         style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
       >
-        <span className="relative z-10">Play Now</span>
+        <span className="relative z-10">Begin the Journey 💕</span>
       </motion.button>
 
       <motion.p
